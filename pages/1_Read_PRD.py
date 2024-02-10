@@ -60,6 +60,19 @@ if prd_file is not None:
         st.write(chunk.page_content)
         st.divider()
 
+    from langchain_community.vectorstores.chroma import Chroma
+    from langchain_openai import OpenAIEmbeddings
+
+    os.environ["OPENAI_API_KEY"] = ""
+
+    ids = [str(i+1) for i in range(len(chunks))]
+    vectorstore = Chroma.from_documents(documents=chunks, embedding=OpenAIEmbeddings(), ids=ids)
+    retriever = vectorstore.as_retriever(search_kwargs={"k":3})
+
+    st.write(retriever.invoke("Identify the Functional Requirements"))
+
+    # results = vectorstore.q
+
     # loader = Docx2txtLoader(temp_file_name)
     # chunks = loader.load()
 
