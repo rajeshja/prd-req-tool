@@ -8,6 +8,7 @@ def get_gpt35turbo():
     """
     from langchain_openai import ChatOpenAI
     return ChatOpenAI(model="gpt-3.5-turbo", temperature=0)
+
 def get_gpt35_instruct():
     """This returns the ChatGPT 3.5 Turbo Instruct model. The context window is 4k.
     This model is an Instruct model, and is best suited to for NLP tasks and when

@@ -4,6 +4,7 @@ import os
 from langchain.document_loaders.word_document import Docx2txtLoader
 from langchain_core.documents.base import Document
 from langchain.globals import set_debug
+from llmfactory import get_gpt35_llm, get_gpt35turbo
 import  tiktoken
 
 def calculate_tokens(text):
@@ -117,8 +118,6 @@ def get_requirements_from_mapreduce_chain(_llm, _chunks):
     import json
     return json.loads(requirements)["requirements"]
 
-from llmfactory import get_gpt35_llm, get_gpt35turbo
-
 def get_stories(selected_reqs, vectorstore):
     import json
 
@@ -170,7 +169,7 @@ def get_story(req, _retriever):
     )
     return chain({"query": req})
 
-st.header("Time to import the PRD")
+st.subheader("First, let's import the PRD")
 
 prd_file = st.file_uploader("Upload a PRD document", ["docx"])
 
@@ -184,11 +183,11 @@ if prd_file is not None:
     from langchain_openai import OpenAIEmbeddings
     vectorstore = documents_to_chroma(chunks, OpenAIEmbeddings())
 
-    retriever = vectorstore.as_retriever()
-
     requirements = get_requirements_from_mapreduce_chain(get_gpt35_llm(), chunks)
     for i, requirement in enumerate(requirements):
         st.markdown(f"{i+1}. {requirement}")
+
+    st.subheader("Next, select the requirements you would like to convert to stories")
 
     selected_reqs = st.multiselect("Select the requirements to expand", requirements, [])
 
